@@ -1,32 +1,32 @@
-# Elosonc
+# Elosnoc
 
 A simple, light-weighted and highly-customizable logger system for javascript.
 
 ## Install
 
 ```bash
-npm install elosonc
+npm install Elosnoc
 ```
 
 ## Usage
 
 ```typescript
-import { Elosonc } from 'elosonc'
-const elosonc = Elosonc()
-elosonc.info('💬YAHO!')
-elosonc.warn('⚠️DANGER!')
-elosonc.error('❌OH NO!')
-elosonc.emergency('☠️KERNEL PANIC')
+import { Elosnoc } from 'Elosnoc'
+const elosnoc = Elosnoc()
+elosnoc.info('💬YAHO!')
+elosnoc.warn('⚠️DANGER!')
+elosnoc.error('❌OH NO!')
+elosnoc.emergency('☠️KERNEL PANIC')
 ```
 
 The log will be written to stdout if level is lower than WARN, and be written to stderr otherwise.
 
 ## API
 
-#### Elosonc
+#### Elosnoc
 
 ```typescript
-  function Elosonc(elosoncOptions?: ElosoncOptions): Logger;
+  function Elosnoc(ElosnocOptions?: ElosnocOptions): Logger;
 ```
 Get the logger.
 
@@ -49,4 +49,4 @@ Get the logger.
 
 ## LICENSE
 
-Elosonc is licensed under LGPL-2.1.
+Elosnoc is licensed under LGPL-2.1.
