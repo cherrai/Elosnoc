@@ -1,4 +1,4 @@
-import { Elosonc, Logger } from '../dist'
+import { Elosnoc, Logger } from '../dist'
 import * as R from 'ramda'
 
 const logTest = (log: Logger) => {
@@ -13,11 +13,11 @@ const logTest = (log: Logger) => {
 }
 
 const loggers = [
-  Elosonc(),
-  Elosonc({ logLevel: 'INFO' }),
-  Elosonc({
+  Elosnoc(),
+  Elosnoc({ logLevel: 'INFO' }),
+  Elosnoc({
     logLevel: 'WARN',
-    renderer: (level, content) => `nya~nya~${level}! ${content}`,
+    renderer: (level, content) => `nya~nya~☠️ ${level}! ${content}`,
     postHook: () => {
       console.log('meow!')
     },

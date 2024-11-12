@@ -21,7 +21,7 @@ type LogLevel1 = (typeof LOG_LEVELS_1)[number]
 type Renderer = (level: LogLevel, content: string) => string
 type PostHook = (level: LogLevel, content: string, rendered: string) => void
 
-type ElosoncOptions = {
+type ElosnocOptions = {
   renderer?: Renderer
   logLevel?: LogLevel
   postHook?: PostHook
@@ -32,10 +32,10 @@ type Logger = Record<LogLevel1, LogFunction>
 
 const logLevelToEnum = (logLevel: LogLevel) => LOG_LEVELS.findIndex((x) => x === logLevel) as LogLevelEnum
 
-const Elosonc = (elosoncOptions?: ElosoncOptions): Logger => {
-  const logLevel = logLevelToEnum(elosoncOptions?.logLevel || 'DEBUG')
-  const renderer = elosoncOptions?.renderer || defaultRenderer;
-  const postHook = elosoncOptions?.postHook || (() => {})
+const Elosnoc = (ElosnocOptions?: ElosnocOptions): Logger => {
+  const logLevel = logLevelToEnum(ElosnocOptions?.logLevel || 'DEBUG')
+  const renderer = ElosnocOptions?.renderer || defaultRenderer;
+  const postHook = ElosnocOptions?.postHook || (() => {})
   const getEntry = (level: LogLevel) => {
     const level1 = level.toLowerCase() as LogLevel1
     const level2: LogLevelEnum = logLevelToEnum(level)
@@ -57,8 +57,8 @@ const Elosonc = (elosoncOptions?: ElosoncOptions): Logger => {
 }
 
 export {
-  Elosonc,
-  ElosoncOptions,
+  Elosnoc,
+  ElosnocOptions,
   Logger,
   LogLevel,
   LogLevel1,
