@@ -64,6 +64,7 @@ export {
   LogLevel1,
   Renderer,
   PostHook,
+  LogLevelEnum,
   logLevelToEnum,
   LOG_LEVELS,
   LOG_LEVELS_1,
