@@ -49,4 +49,4 @@ Get the logger.
 
 ## LICENSE
 
-Elosonc is licensed under LGPL-2.0.
+Elosonc is licensed under LGPL-2.1.
