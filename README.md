@@ -19,6 +19,8 @@ elosonc.error('❌OH NO!')
 elosonc.emergency('☠️KERNEL PANIC')
 ```
 
+The log will be written to stdout if level is lower than WARN, and be written to stderr otherwise.
+
 ## API
 
 #### Elosonc
