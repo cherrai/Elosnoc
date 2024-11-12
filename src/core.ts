@@ -1,4 +1,3 @@
-import { font } from 'terminal-font'
 import * as R from 'ramda'
 import { defaultRenderer } from './defaultRenderer.js'
 
