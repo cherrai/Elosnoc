@@ -1,4 +1,4 @@
-import { LogLevel, Renderer } from './index.js'
+import { LogLevel, Renderer } from './core.js'
 import { IFont, font } from 'terminal-font'
 
 const styleMap: Record<LogLevel, IFont> = {

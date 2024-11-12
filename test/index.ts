@@ -1,4 +1,4 @@
-import { Elosonc } from '../src/index.js'
+import { Elosonc } from '../dist'
 
 const logger = Elosonc()
 logger.alert('222')

@@ -5,14 +5,19 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "pnpx tsx ./test/index.ts"
+    "test": "pnpx tsx ./test/index.ts",
+    "dry-publish": "pnpm publish --dry-run --no-git-checks"
   },
-  "keywords": ["logger"],
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "logger"
+  ],
   "author": "cherrai",
   "license": "LGPL-2.0-only",
   "dependencies": {
     "ramda": "^0.30.1",
-    "rxjs": "^7.8.1",
     "terminal-font": "^0.9.3"
   },
   "devDependencies": {
