@@ -1,5 +1,6 @@
 import * as R from 'ramda'
-import { defaultRenderer } from './defaultRenderer.js'
+import { defaultPrinter, defaultRenderer } from './preset.js'
+import { KeyWithDefault } from './utils.js'
 
 enum LogLevelEnum {
   DEBUG,
@@ -18,40 +19,38 @@ const LOG_LEVELS_1 = ['debug', 'info', 'notice', 'warn', 'error', 'critical', 'a
 type LogLevel = (typeof LOG_LEVELS)[number]
 type LogLevel1 = (typeof LOG_LEVELS_1)[number]
 
-type Renderer = (level: LogLevel, content: string) => string
-type PostHook = (level: LogLevel, content: string, rendered: string) => void
+type Printer<P = string> = (level: LogLevel, rendered: P, logLevel: LogLevel) => void
+type Renderer<T = unknown, P = string> = (level: LogLevel, content: T, logLevel: LogLevel) => P
+type PostHook<T = unknown, P = string> = (level: LogLevel, content: T, rendered: P, logLevel: LogLevel) => void
+type ElosnocOptions<T = unknown, P = string> = { logLevel?: LogLevel } & KeyWithDefault<
+  'printer',
+  Printer<P>,
+  Printer<string>
+> &
+  KeyWithDefault<'renderer', Renderer<T, P>, Renderer<unknown, string>> &
+  KeyWithDefault<'postHook', PostHook<T, P>, PostHook<unknown, string>>
 
-type ElosnocOptions = {
-  renderer?: Renderer
-  logLevel?: LogLevel
-  postHook?: PostHook
-}
-
-type LogFunction = (content: string) => void
-type Logger = Record<LogLevel1, LogFunction>
+type LogFunction<T> = (content: T) => void
+type Logger<T> = Record<LogLevel1, LogFunction<T>>
 
 const logLevelToEnum = (logLevel: LogLevel) => LOG_LEVELS.findIndex((x) => x === logLevel) as LogLevelEnum
 
-const Elosnoc = (ElosnocOptions?: ElosnocOptions): Logger => {
-  const logLevel = logLevelToEnum(ElosnocOptions?.logLevel || 'DEBUG')
-  const renderer = ElosnocOptions?.renderer || defaultRenderer;
-  const postHook = ElosnocOptions?.postHook || (() => {})
+const Elosnoc = <T = unknown, P = string>(ElosnocOptions?: ElosnocOptions<T, P>): Logger<T> => {
+  const logLevel = ElosnocOptions?.logLevel || 'DEBUG'
+  const printer = ElosnocOptions?.printer || (defaultPrinter as Printer<P>)
+  const postHook = (ElosnocOptions?.postHook || (() => {})) as PostHook<T, P>
+  const renderer = (ElosnocOptions?.renderer || defaultRenderer) as Renderer<T, P>
+
   const getEntry = (level: LogLevel) => {
     const level1 = level.toLowerCase() as LogLevel1
-    const level2: LogLevelEnum = logLevelToEnum(level)
-    const stdout = level2 >= LogLevelEnum.WARN ? process.stderr : process.stdout
     return [
       level1,
-      (content: string) => {
-        level2 >= logLevel &&
-          (() => {
-            const rendered = renderer(level, content)
-            stdout.write(rendered);
-            stdout.write('\n');
-            postHook(level, content, rendered)
-          })();
+      (content: T) => {
+        const rendered = renderer(level, content, logLevel)
+        printer(level, rendered, logLevel)
+        postHook(level, content, rendered, logLevel)
       },
-    ] as [LogLevel1, LogFunction]
+    ] as [LogLevel1, LogFunction<T>]
   }
   return R.pipe(R.map(getEntry), R.fromPairs)(LOG_LEVELS)
 }
@@ -64,6 +63,7 @@ export {
   LogLevel1,
   Renderer,
   PostHook,
+  Printer,
   LogLevelEnum,
   logLevelToEnum,
   LOG_LEVELS,

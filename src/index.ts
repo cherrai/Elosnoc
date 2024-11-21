@@ -1,2 +1,2 @@
 export * from './core.js';
-export * from './defaultRenderer.js';
+export * from './preset.js';

@@ -1,7 +1,7 @@
 import { Elosnoc, Logger } from '../dist'
 import * as R from 'ramda'
 
-const logTest = (log: Logger) => {
+const logTest = (log: Logger<unknown>) => {
   log.debug('DEBUG')
   log.info('INFO')
   log.notice('NOTICE')
@@ -10,6 +10,7 @@ const logTest = (log: Logger) => {
   log.error('ERROR')
   log.critical('CRITICAL')
   log.emergency('EMERGENCY')
+  log.warn([1, 'foo', { bar: 'baz' }])
 }
 
 const loggers = [
