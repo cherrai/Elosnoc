@@ -22,13 +22,12 @@ type LogLevel1 = (typeof LOG_LEVELS_1)[number]
 type Printer<P = string> = (level: LogLevel, rendered: P, logLevel: LogLevel) => void
 type Renderer<T = unknown, P = string> = (level: LogLevel, content: T, logLevel: LogLevel) => P
 type PostHook<T = unknown, P = string> = (level: LogLevel, content: T, rendered: P, logLevel: LogLevel) => void
-type ElosnocOptions<T = unknown, P = string> = { logLevel?: LogLevel } & KeyWithDefault<
+type ElosnocOptions<T = unknown, P = string> = { logLevel?: LogLevel; postHook?: PostHook<T, P> } & KeyWithDefault<
   'printer',
   Printer<P>,
   Printer<string>
 > &
-  KeyWithDefault<'renderer', Renderer<T, P>, Renderer<unknown, string>> &
-  KeyWithDefault<'postHook', PostHook<T, P>, PostHook<unknown, string>>
+  KeyWithDefault<'renderer', Renderer<T, P>, Renderer<unknown, string>>
 
 type LogFunction<T> = (content: T) => void
 type Logger<T> = Record<LogLevel1, LogFunction<T>>
