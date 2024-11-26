@@ -4,7 +4,15 @@ A simple, light-weighted and highly-customizable logger system for javascript.
 
 ## What's new
 
-_Added in v0.10.0_
+_Updated in v0.11.0_
+
+- Post-hook is always optional.
+- Use bundler parameters for renderer, printer and post-hook 
+- Default renderer is renamed to `fancy`
+- Add a new renderer: `vanilla`. Just explore it:)
+- Add a renderer wrapper `syslog` to generate logs that fit syslog protocol
+
+_Updated in v0.10.0_
 
 - Typescript enhancement: add support for customize the the type of the arguments of `renderer`
 - Add support for customize the printer function
@@ -44,7 +52,7 @@ Get the logger.
   /** Set Log Level. Default to 'DEBUG' */
   logLevel: LogLevel;
   /** Customize renderer, which will be use to render the content tox
-   *  Use the default renderer when omitted
+   *  Use the default renderer(fancy) when omitted
    * */
   renderer: (level: LogLevel, content: T, logLevel: LogLevel) => P;
   /** Customize the printer. By default, the message will be written to stdout
@@ -57,6 +65,15 @@ Get the logger.
   postHook: (level: LogLevel, content: T, rendered: P, logLevel: LogLevel) => void;
 }
 ```
+
+#### syslog
+
+```typescript
+function syslog<P>(source: Renderer<P, string>) => Renderer<P, string>
+```
+
+Wrap a renderer to generate messages fit the syslog protocol.
+Requires the renderer returning a string.
 
 ## LICENSE
 
