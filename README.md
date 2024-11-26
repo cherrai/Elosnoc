@@ -4,6 +4,13 @@ A simple, light-weighted and highly-customizable logger system for javascript.
 
 ## What's new
 
+_Updated in v0.12.0_
+- Now log function supports variadic parameters.
+- Add the concepts of _Combinator_, which defines how to combine the rendered result from _Renderer_ to support variadic-parameters log function
+- Add _Combinator generator_ `gulp`. 
+- Update the implementation of `fancy`. Part of implementation of `fancy` is removed to preset _combinator wrapper_ `candy` in order to keep compatibility with variadic-parameters log function
+- `syslog` is now a _combinator wrapper_ instead of _renderer wrapper_
+
 _Updated in v0.11.0_
 
 - Post-hook is always optional.
@@ -66,14 +73,30 @@ Get the logger.
 }
 ```
 
+## Presets
+
+Elosnoc provides some preset renderer, combinator generator and wrapper. It will by default use some of them, to provides a out-of-box experience.
+
+
+#### fancy
+##### Type: Renderer
+Render logs with some awesome styles.
+
+#### gulp
+##### Type: Combinator generator
+Join all strings rendered with the separator given
+
+#### candy
+##### Type: Combinator wrapper
+Adds timestamp info to the header of the log
+
 #### syslog
+##### Type: Combinator wrapper
+Adds syslog protocol code to the header of the log.
 
-```typescript
-function syslog<P>(source: Renderer<P, string>) => Renderer<P, string>
-```
-
-Wrap a renderer to generate messages fit the syslog protocol.
-Requires the renderer returning a string.
+#### vanilla
+##### Type: Renderer
+~~A powerful renderer that can implement highly-performance JavaScript~~
 
 ## LICENSE
 
