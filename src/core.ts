@@ -3,18 +3,18 @@ import { defaultPrinter, defaultRenderer } from './preset.js'
 import { FunctionParametersBundler, KeyWithDefault } from './utils.js'
 
 enum LogLevelEnum {
-  DEBUG,
-  INFO,
-  NOTICE,
-  WARN,
-  ERROR,
-  CRITICAL,
-  ALERT,
   EMERGENCY,
+  ALERT,
+  CRITICAL,
+  ERROR,
+  WARN,
+  NOTICE,
+  INFO,
+  DEBUG,
 }
 
-const LOG_LEVELS = ['DEBUG', 'INFO', 'NOTICE', 'WARN', 'ERROR', 'CRITICAL', 'ALERT', 'EMERGENCY'] as const
-const LOG_LEVELS_1 = ['debug', 'info', 'notice', 'warn', 'error', 'critical', 'alert', 'emergency'] as const
+const LOG_LEVELS = ['EMERGENCY', 'ALERT', 'CRITICAL', 'ERROR', 'WARN', 'NOTICE', 'INFO', 'DEBUG'] as const
+const LOG_LEVELS_1 = ['emergency', 'alert', 'critical', 'error', 'warn', 'notice', 'info', 'debug'] as const
 
 type LogLevel = (typeof LOG_LEVELS)[number]
 type LogLevel1 = (typeof LOG_LEVELS_1)[number]

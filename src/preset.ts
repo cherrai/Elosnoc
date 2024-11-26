@@ -1,5 +1,6 @@
 import { LogLevel, Printer, Renderer, logLevelToEnum, LogLevelEnum } from './core.js'
 import { IFont, font } from 'terminal-font'
+import * as R from 'ramda'
 
 const styleMap: Record<LogLevel, IFont> = {
   ALERT: font().red(),
@@ -22,13 +23,20 @@ const defaultRenderer: Renderer<unknown, string> = ({ level, content }) =>
 const defaultPrinter: Printer<string> = ({ level, rendered, logLevel }) => {
   const level2 = logLevelToEnum(level)
   const logLevel2 = logLevelToEnum(logLevel)
-  const stdout = level2 >= LogLevelEnum.WARN ? process.stderr : process.stdout
+  const stdout = level2 <= LogLevelEnum.WARN ? process.stderr : process.stdout
 
-  level2 >= logLevel2 &&
+  level2 <= logLevel2 &&
     (() => {
       stdout.write(rendered)
       stdout.write('\n')
     })()
 }
 
-export { defaultRenderer, defaultPrinter }
+const identityRenderer: Renderer<unknown, string> = ({ content }) => `${content}`
+
+const syslog: <P>(source: Renderer<P, string>) => Renderer<P, string> =
+  (source) =>
+  ({ level, content, logLevel }) =>
+    `<${logLevelToEnum(level)}>${source({ level, content, logLevel })}`
+
+export { defaultRenderer, defaultPrinter, identityRenderer, syslog }
