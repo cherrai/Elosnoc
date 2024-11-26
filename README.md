@@ -79,23 +79,28 @@ Elosnoc provides some preset renderer, combinator generator and wrapper. It will
 
 
 #### fancy
-- **Type: Renderer**
+_Type: Renderer_
+
 Render logs with some awesome styles.
 
 #### gulp
-- **Type: Combinator generator**
+_Type: Combinator generator_
+
 Join all strings rendered with the separator given
 
 #### candy
-- **Type: Combinator wrapper**
+_Type: Combinator wrapper_
+
 Adds timestamp info to the header of the log
 
 #### syslog
-- **Type: Combinator wrapper**
+_Type: Combinator wrapper_
+
 Adds syslog protocol code to the header of the log.
 
 #### vanilla
-- **Type: Renderer**
+_Type: Renderer_
+
 ~~A powerful renderer that can implement highly-performance JavaScript~~
 
 ## LICENSE
