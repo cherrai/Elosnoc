@@ -6,9 +6,9 @@ const logTest = (log: Logger<unknown>) => {
   log.info('INFO')
   log.notice('NOTICE')
   log.warn('WARN')
-  log.alert('ALERT')
   log.error('ERROR')
   log.critical('CRITICAL')
+  log.alert('ALERT')
   log.emergency('EMERGENCY')
   log.warn([1, 'foo', { bar: 'baz' }])
 }
@@ -18,7 +18,7 @@ const loggers = [
   Elosnoc({ logLevel: 'INFO' }),
   Elosnoc({
     logLevel: 'WARN',
-    renderer: (level, content) => `nya~nya~☠️ ${level}! ${content}`,
+    renderer: ({level, content}) => `nya~nya~☠️ ${level}! ${content}`,
     postHook: () => {
       console.log('meow!')
     },

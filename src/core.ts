@@ -1,6 +1,6 @@
 import * as R from 'ramda'
 import { defaultPrinter, defaultRenderer } from './preset.js'
-import { KeyWithDefault } from './utils.js'
+import { FunctionParametersBundler, KeyWithDefault } from './utils.js'
 
 enum LogLevelEnum {
   DEBUG,
@@ -19,9 +19,29 @@ const LOG_LEVELS_1 = ['debug', 'info', 'notice', 'warn', 'error', 'critical', 'a
 type LogLevel = (typeof LOG_LEVELS)[number]
 type LogLevel1 = (typeof LOG_LEVELS_1)[number]
 
-type Printer<P = string> = (level: LogLevel, rendered: P, logLevel: LogLevel) => void
-type Renderer<T = unknown, P = string> = (level: LogLevel, content: T, logLevel: LogLevel) => P
-type PostHook<T = unknown, P = string> = (level: LogLevel, content: T, rendered: P, logLevel: LogLevel) => void
+type RendererOptions<T = unknown> = {
+  level: LogLevel
+  content: T
+  logLevel: LogLevel
+}
+
+type PostHookOptions<T = unknown, P = string> = {
+  level: LogLevel
+  content: T
+  rendered: P
+  logLevel: LogLevel
+}
+
+type PrinterOptions<P> = {
+  level: LogLevel
+  rendered: P
+  logLevel: LogLevel
+}
+
+type Printer<P = string> = (printerOptions: PrinterOptions<P>) => void
+type Renderer<T = unknown, P = string> = (renderOptions: RendererOptions<T>) => P
+type PostHook<T = unknown, P = string> = (postHookOptions: PostHookOptions<T, P>) => void
+
 type ElosnocOptions<T = unknown, P = string> = { logLevel?: LogLevel; postHook?: PostHook<T, P> } & KeyWithDefault<
   'printer',
   Printer<P>,
@@ -45,9 +65,9 @@ const Elosnoc = <T = unknown, P = string>(ElosnocOptions?: ElosnocOptions<T, P>)
     return [
       level1,
       (content: T) => {
-        const rendered = renderer(level, content, logLevel)
-        printer(level, rendered, logLevel)
-        postHook(level, content, rendered, logLevel)
+        const rendered = renderer({ level, content, logLevel })
+        printer({ level, rendered, logLevel })
+        postHook({ level, content, rendered, logLevel })
       },
     ] as [LogLevel1, LogFunction<T>]
   }
