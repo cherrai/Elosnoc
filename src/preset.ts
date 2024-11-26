@@ -1,6 +1,5 @@
-import { LogLevel, Printer, Renderer, logLevelToEnum, LogLevelEnum } from './core.js'
+import { LogLevel, Printer, Renderer, logLevelToEnum, LogLevelEnum, Combinator } from './core.js'
 import { IFont, font } from 'terminal-font'
-import * as R from 'ramda'
 
 const styleMap: Record<LogLevel, IFont> = {
   ALERT: font().red(),
@@ -17,26 +16,40 @@ const myToString = (x: unknown) => {
   return typeof x === 'object' ? JSON.stringify(x, null, 2) : `${x}`
 }
 
-const fancy: Renderer<unknown, string> = ({ level, content }) =>
-  styleMap[level].apply(`[${new Date().toLocaleString('ja-jp')} ${level}] ${myToString(content)}`)
-
-const defaultPrinter: Printer<string> = ({ level, rendered, logLevel }) => {
+const pandora: Printer<string> = ({ level, output, logLevel }) => {
   const level2 = logLevelToEnum(level)
   const logLevel2 = logLevelToEnum(logLevel)
   const stdout = level2 <= LogLevelEnum.WARN ? process.stderr : process.stdout
 
   level2 <= logLevel2 &&
     (() => {
-      stdout.write(rendered)
+      stdout.write(output)
       stdout.write('\n')
     })()
 }
 
+/**A renderer that be able to implement highly-performance JavaScript */
 const vanilla: Renderer<unknown, string> = ({ content }) => `${myToString(content)}`
 
-const syslog: <P>(source: Renderer<P, string>) => Renderer<P, string> =
-  (source) =>
-  ({ level, content, logLevel }) =>
-    `<${logLevelToEnum(level)}>${source({ level, content, logLevel })}`
+/**A render using some awesome styles */
+const fancy: Renderer<unknown, string> = ({ level, content }) => styleMap[level].apply(`${myToString(content)}`)
 
-export { fancy, defaultPrinter, vanilla, syslog }
+/**A combinator generator joining string using separator */
+const gulp: (separator?: string) => Combinator<string, string> =
+  (separator) =>
+  ({ rendered }) =>
+    rendered.join(separator || ' ')
+
+/**A combinator wrapper that adds timestamp */
+const candy: <P>(source: Combinator<P, string>) => Combinator<P, string> =
+  (source) =>
+  ({ rendered, level, logLevel }) =>
+    styleMap[level].apply(`${new Date().toLocaleString('ja-jp')} ${level}] ${source({ rendered, level, logLevel })}`)
+
+/**A combinator wrapper that adds syslog protocol code */
+const syslog: <P>(source: Combinator<P, string>) => Combinator<P, string> =
+  (source) =>
+  ({ level, rendered, logLevel }) =>
+    `<${logLevelToEnum(level)}>${source({ level, rendered, logLevel })}`
+
+export { fancy, pandora, gulp, candy, vanilla, syslog }
