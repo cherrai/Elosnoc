@@ -1,5 +1,5 @@
 import * as R from 'ramda'
-import { defaultPrinter, defaultRenderer } from './preset.js'
+import { defaultPrinter, fancy } from './preset.js'
 import { FunctionParametersBundler, KeyWithDefault } from './utils.js'
 
 enum LogLevelEnum {
@@ -58,7 +58,7 @@ const Elosnoc = <T = unknown, P = string>(ElosnocOptions?: ElosnocOptions<T, P>)
   const logLevel = ElosnocOptions?.logLevel || 'DEBUG'
   const printer = ElosnocOptions?.printer || (defaultPrinter as Printer<P>)
   const postHook = (ElosnocOptions?.postHook || (() => {})) as PostHook<T, P>
-  const renderer = (ElosnocOptions?.renderer || defaultRenderer) as Renderer<T, P>
+  const renderer = (ElosnocOptions?.renderer || fancy) as Renderer<T, P>
 
   const getEntry = (level: LogLevel) => {
     const level1 = level.toLowerCase() as LogLevel1

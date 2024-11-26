@@ -17,7 +17,7 @@ const myToString = (x: unknown) => {
   return typeof x === 'object' ? JSON.stringify(x, null, 2) : `${x}`
 }
 
-const defaultRenderer: Renderer<unknown, string> = ({ level, content }) =>
+const fancy: Renderer<unknown, string> = ({ level, content }) =>
   styleMap[level].apply(`[${new Date().toLocaleString('ja-jp')} ${level}] ${myToString(content)}`)
 
 const defaultPrinter: Printer<string> = ({ level, rendered, logLevel }) => {
@@ -32,11 +32,11 @@ const defaultPrinter: Printer<string> = ({ level, rendered, logLevel }) => {
     })()
 }
 
-const identityRenderer: Renderer<unknown, string> = ({ content }) => `${content}`
+const vanilla: Renderer<unknown, string> = ({ content }) => `${myToString(content)}`
 
 const syslog: <P>(source: Renderer<P, string>) => Renderer<P, string> =
   (source) =>
   ({ level, content, logLevel }) =>
     `<${logLevelToEnum(level)}>${source({ level, content, logLevel })}`
 
-export { defaultRenderer, defaultPrinter, identityRenderer, syslog }
+export { fancy, defaultPrinter, vanilla, syslog }
