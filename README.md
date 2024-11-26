@@ -47,31 +47,27 @@ elosnoc.emergency('☠️KERNEL PANIC')
 #### Elosnoc
 
 ```typescript
-function Elosnoc<T = unknown, P = string>(ElosnocOptions?: ElosnocOptions<T, P>): Logger
+function Elosnoc<T = unknown, P = string, K=string>(ElosnocOptions?: ElosnocOptions<T, P>): Logger
 ```
 
 Get the logger.
 
 **Options**
 
-```typescript
-{
-  /** Set Log Level. Default to 'DEBUG' */
-  logLevel: LogLevel;
-  /** Customize renderer, which will be use to render the content tox
-   *  Use the default renderer(fancy) when omitted
-   * */
-  renderer: (level: LogLevel, content: T, logLevel: LogLevel) => P;
-  /** Customize the printer. By default, the message will be written to stdout
-   *  if level is lower than WARN, and be written to stderr otherwise. */
-  printer: (level: LogLevel, rendered: P, logLevel: LogLevel) => void;
-  /** Customize post hook. It will be run after each rendering
-   *  (i.e. will not be run if the level of the log is lower than logLevel
-   *  as in this case the log will not be rendered.)
-   * */
-  postHook: (level: LogLevel, content: T, rendered: P, logLevel: LogLevel) => void;
-}
-```
+- **`logLevel`**
+  Set the `logLevel`, default to `'DEBUG'`
+
+- **`renderer`**
+  Customize the renderer, default to `fancy`
+
+- **`combinator`**
+  Customize the combinator, default to `candy(gulp())`
+
+- **`printer`**
+  Customize the printer, default to `pandora`
+
+- **`postHook`**
+  Customize the post-hook, default to `()=>{}` (do nothing)
 
 ## Presets
 
