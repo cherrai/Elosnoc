@@ -15,9 +15,11 @@ enum LogLevelEnum {
 
 const LOG_LEVELS = ['EMERGENCY', 'ALERT', 'CRITICAL', 'ERROR', 'WARN', 'NOTICE', 'INFO', 'DEBUG'] as const
 const LOG_LEVELS_1 = ['emergency', 'alert', 'critical', 'error', 'warn', 'notice', 'info', 'debug'] as const
+const LOG_LEVELS_2 = ['error', 'warn', 'info', 'debug', 'log'] as const
 
 type LogLevel = (typeof LOG_LEVELS)[number]
 type LogLevel1 = (typeof LOG_LEVELS_1)[number]
+type LogLevel2 = (typeof LOG_LEVELS_2)[number]
 
 type RendererOptions<T = unknown> = {
   level: LogLevel
@@ -68,26 +70,34 @@ const Elosnoc = <T = unknown, P = string, K = string>(ElosnocOptions?: ElosnocOp
 
   const getEntry = (level: LogLevel) => {
     const level1 = level.toLowerCase() as LogLevel1
+    const level2 = logLevelToEnum(level)
+    const logLevel2 = logLevelToEnum(logLevel)
     return [
       level1,
       (...contents: T[]) => {
-        const output = R.pipe(
-          R.map((content: T) => ({ level, content, logLevel })),
-          R.map(renderer),
-          (rendered: P[]) => ({
-            rendered,
-            level,
-            logLevel,
-          }),
-          combinator
-        )(contents)
-        printer({ level, output, logLevel })
-        postHook({ level, contents, output, logLevel })
+        level2 <= logLevel2 &&
+          R.tap(() => {
+            const output = R.pipe(
+              R.map((content: T) => ({ level, content, logLevel })),
+              R.map(renderer),
+              (rendered: P[]) => ({
+                rendered,
+                level,
+                logLevel,
+              }),
+              combinator
+            )(contents)
+            printer({ level, output, logLevel })
+            postHook({ level, contents, output, logLevel })
+          })(null)
       },
     ] as [LogLevel1, LogFunction<T>]
   }
   return R.pipe(R.map(getEntry), R.fromPairs)(LOG_LEVELS)
 }
+
+const hookNativeConsole = (logger: Logger<any>) =>
+  R.map(R.tap((hook: LogLevel2) => (console[hook] = logger[hook === 'log' ? 'info' : hook])))
 
 const logLevelToEnum = (logLevel: LogLevel) => LOG_LEVELS.findIndex((x) => x === logLevel) as LogLevelEnum
 
@@ -104,6 +114,7 @@ export {
   Printer,
   LogLevelEnum,
   logLevelToEnum,
+  hookNativeConsole,
   LOG_LEVELS,
   LOG_LEVELS_1,
 }

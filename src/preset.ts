@@ -16,16 +16,12 @@ const myToString = (x: unknown) => {
   return typeof x === 'object' ? JSON.stringify(x, null, 2) : `${x}`
 }
 
-const pandora: Printer<string> = ({ level, output, logLevel }) => {
+const pandora: Printer<string> = ({ level, output }) => {
   const level2 = logLevelToEnum(level)
-  const logLevel2 = logLevelToEnum(logLevel)
   const stdout = level2 <= LogLevelEnum.WARN ? process.stderr : process.stdout
 
-  level2 <= logLevel2 &&
-    (() => {
-      stdout.write(output)
-      stdout.write('\n')
-    })()
+  stdout.write(output)
+  stdout.write('\n')
 }
 
 /**A renderer that be able to implement highly-performance JavaScript */
@@ -44,7 +40,7 @@ const gulp: (separator?: string) => Combinator<string, string> =
 const candy: <P>(source: Combinator<P, string>) => Combinator<P, string> =
   (source) =>
   ({ rendered, level, logLevel }) =>
-    styleMap[level].apply(`${new Date().toLocaleString('ja-jp')} ${level}] ${source({ rendered, level, logLevel })}`)
+    styleMap[level].apply(`[${new Date().toLocaleString('ja-jp')} ${level}] ${source({ rendered, level, logLevel })}`)
 
 /**A combinator wrapper that adds syslog protocol code */
 const syslog: <P>(source: Combinator<P, string>) => Combinator<P, string> =

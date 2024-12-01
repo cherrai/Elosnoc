@@ -4,9 +4,15 @@ A simple, light-weighted and highly-customizable logger system for javascript.
 
 ## What's new
 
+_Updated in v0.13.0_
+
+- Add new API `hookNativeConsole`
+- Fixes the format of combinator `fancy`
+- Optimize the logic of the log function: now renderer, combinator and post-hook function will only be executed when needed
+
 _Updated in v0.12.0_
 
-- Now log function supports variadic parameters.
+- Now log function supports variadic parameters
 - Add the concepts of _Combinator_, which defines how to combine the rendered result from _Renderer_ to support variadic-parameters log function
 - Add _Combinator generator_ `gulp`.
 - Update the implementation of `fancy`. Part of implementation of `fancy` is removed to preset _combinator wrapper_ `candy` in order to keep compatibility with variadic-parameters log function
@@ -29,13 +35,13 @@ _Updated in v0.10.0_
 ## Install
 
 ```bash
-npm install Elosnoc
+npm install elosnoc
 ```
 
 ## Basic Usage
 
 ```typescript
-import { Elosnoc } from 'Elosnoc'
+import { Elosnoc } from 'elosnoc'
 const elosnoc = Elosnoc()
 elosnoc.info('💬YAHO!')
 elosnoc.warn('⚠️DANGER!')
@@ -69,6 +75,14 @@ Get the logger.
 
 - **`postHook`**
   Customize the post-hook, default to `()=>{}` (do nothing)
+
+#### hookNativeConsole
+
+```typescript
+function hookNativeConsole: (logger: Logger<any>) => (hooks: LogLevel2[]) => void;
+```
+
+Install hooks into native `console` object using the log function from `logger`.
 
 ## Presets
 

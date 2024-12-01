@@ -1,4 +1,4 @@
-import { Elosnoc, Logger, vanilla, syslog, candy, gulp } from '../dist'
+import { Elosnoc, Logger, vanilla, syslog, candy, gulp, hookNativeConsole } from '../dist'
 import * as R from 'ramda'
 
 const logTest = (log: Logger<unknown>) => {
@@ -12,6 +12,13 @@ const logTest = (log: Logger<unknown>) => {
   log.emergency('EMERGENCY')
   log.info(1, 2, 3, 4, '5', [6, { foo: 'bar' }], { baz: 'bah' })
   log.warn([1, 'foo', { bar: 'baz' }])
+
+  hookNativeConsole(log)(['debug', 'error', 'info', 'log', 'warn'])
+  console.debug('console.debug hooked')
+  console.info('console.info hooked')
+  console.warn('console.warn hooked')
+  console.error('console.error hooked')
+  console.log('console.log hooked')
 }
 
 const loggers = [
@@ -21,7 +28,7 @@ const loggers = [
     logLevel: 'WARN',
     renderer: ({ level, content }) => `nya~nya~☠️ ${level}! ${content}`,
     postHook: () => {
-      console.log('meow!')
+      process.stdout.write('meow!\n')
     },
   }),
 ]
